@@ -4,10 +4,7 @@ import org.omarsalem.zombies.models.Cordinates;
 import org.omarsalem.zombies.models.SimulationInput;
 import org.omarsalem.zombies.models.SimulationResult;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 
 public class Simulator {
     public SimulationResult run(SimulationInput simulationInput) {
@@ -16,35 +13,35 @@ public class Simulator {
         Queue<Cordinates> infected = new LinkedList<>();
         infected.add(simulationInput.getInitialPosition());
         char[] charArray = simulationInput.getMove().toCharArray();
+        final int dimension = simulationInput.getDimension();
+        final Set<Cordinates> creaturesPositions = simulationInput.getCreaturesPositions();
 
         while (!infected.isEmpty()) {
             Cordinates zombiePosition = ((LinkedList<Cordinates>) infected).pop();
-            int currentX = zombiePosition.getX();
-            int currentY = zombiePosition.getY();
 
             for (int i = 0; i < charArray.length; i++) {
                 char heading = charArray[i];
-                final Cordinates newPosition = getNewPosition(simulationInput.getDimension(),
+                zombiePosition = getNewPosition(dimension,
                         heading,
-                        currentX,
-                        currentY);
-                currentX = newPosition.getX();
-                currentY = newPosition.getY();
-                if (simulationInput.getCreaturesPositions() != null) {
-                    final Optional<Cordinates> potentialInfection = simulationInput.getCreaturesPositions()
+                        zombiePosition.getX(),
+                        zombiePosition.getY());
+
+                if (creaturesPositions != null) {
+                    Cordinates finalZombiePosition = zombiePosition;
+                    final Optional<Cordinates> potentialInfection = creaturesPositions
                             .stream()
-                            .filter(p -> p.equals(newPosition))
+                            .filter(p -> p.equals(finalZombiePosition))
                             .findAny();
 
                     if (potentialInfection.isPresent()) {
                         score++;
                         final Cordinates infection = potentialInfection.get();
                         infected.add(infection);
-                        simulationInput.getCreaturesPositions().remove(infection);
+                        creaturesPositions.remove(infection);
                     }
                 }
                 if (charArray.length - 1 == i) {
-                    zombiePositions.add(newPosition);
+                    zombiePositions.add(zombiePosition);
                 }
             }
         }
