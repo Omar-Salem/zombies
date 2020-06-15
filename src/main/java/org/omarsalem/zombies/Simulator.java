@@ -13,12 +13,13 @@ class Simulator {
         final ArrayList<Point> zombiePositions = new ArrayList<>();
         Queue<Point> infected = new LinkedList<>();
         infected.add(initialPosition);
+        char[] charArray = moves.toCharArray();
+
         while (!infected.isEmpty()) {
             Point zombiePosition = ((LinkedList<Point>) infected).pop();
             int currentX = zombiePosition.x;
             int currentY = zombiePosition.y;
 
-            char[] charArray = moves.toCharArray();
             for (int i = 0; i < charArray.length; i++) {
                 char c = charArray[i];
                 final Point newPosition = getNewPosition(dimension, c, currentX, currentY);
