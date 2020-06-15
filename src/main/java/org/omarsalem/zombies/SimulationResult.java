@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.List;
 
 @Data
-public class SimulationResult {
-    private int score;
-    private List<Point> zombiePositions;
+class SimulationResult {
+    private final int score;
+    private final List<Point> zombiePositions;
 }

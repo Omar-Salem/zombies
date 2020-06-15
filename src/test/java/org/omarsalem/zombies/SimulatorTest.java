@@ -12,6 +12,40 @@ public class SimulatorTest {
     private final Simulator target = new Simulator();
 
     @Test
+    public void run_edgeMovementHorizontal() {
+        //Arrange
+        final int dimension = 10;
+        final Point zombiePosition = new Point(0, 4);
+        final String moves = "L";
+
+        //Act
+        final SimulationResult simulationResult = target.run(dimension,
+                zombiePosition,
+                new Point[0],
+                moves);
+
+        //Assert
+        assertEquals(new Point(9, 4), simulationResult.getZombiePositions().get(0));
+    }
+
+    @Test
+    public void run_edgeMovementVertical() {
+        //Arrange
+        final int dimension = 10;
+        final Point zombiePosition = new Point(3, 9);
+        final String moves = "D";
+
+        //Act
+        final SimulationResult simulationResult = target.run(dimension,
+                zombiePosition,
+                new Point[0],
+                moves);
+
+        //Assert
+        assertEquals(new Point(3, 0), simulationResult.getZombiePositions().get(0));
+    }
+
+    @Test
     public void run() {
         //Arrange
         final int dimension = 4;
