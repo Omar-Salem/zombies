@@ -64,7 +64,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>org.omarsalem.momenton.MomentonApplication</mainClass>
+              <mainClass>org.omarsalem.zombies.App</mainClass>
             </manifest>
           </archive>
         </configuration>

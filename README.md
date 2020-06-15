@@ -11,5 +11,5 @@
 #!bash
 cd zombies
 mvn clean install
-java -jar target/zombies-1.0.jar
+java -jar target/zombies-1.0-SNAPSHOT.jar {path to file}
 ```
