@@ -1,4 +1,4 @@
-package org.omarsalem.zombies;
+package org.omarsalem.zombies.models;
 
 import lombok.Data;
 

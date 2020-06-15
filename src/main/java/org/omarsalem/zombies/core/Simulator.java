@@ -1,12 +1,16 @@
-package org.omarsalem.zombies;
+package org.omarsalem.zombies.core;
+
+import org.omarsalem.zombies.models.Cordinates;
+import org.omarsalem.zombies.models.SimulationInput;
+import org.omarsalem.zombies.models.SimulationResult;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
 
-class Simulator {
-    SimulationResult run(SimulationInput simulationInput) {
+public class Simulator {
+    public SimulationResult run(SimulationInput simulationInput) {
         int score = 0;
         final ArrayList<Cordinates> zombiePositions = new ArrayList<>();
         Queue<Cordinates> infected = new LinkedList<>();

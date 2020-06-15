@@ -1,11 +1,11 @@
-package org.omarsalem.zombies;
+package org.omarsalem.zombies.models;
 
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-class SimulationResult {
+public class SimulationResult {
     private final int score;
     private final List<Cordinates> zombiePositions;
 

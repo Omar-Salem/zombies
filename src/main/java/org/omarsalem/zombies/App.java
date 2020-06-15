@@ -2,6 +2,9 @@ package org.omarsalem.zombies;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
+import org.omarsalem.zombies.core.Simulator;
+import org.omarsalem.zombies.models.SimulationInput;
+import org.omarsalem.zombies.models.SimulationResult;
 
 import java.io.File;
 import java.io.IOException;

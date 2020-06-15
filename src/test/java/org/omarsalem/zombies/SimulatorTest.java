@@ -3,6 +3,10 @@ package org.omarsalem.zombies;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+import org.omarsalem.zombies.core.Simulator;
+import org.omarsalem.zombies.models.Cordinates;
+import org.omarsalem.zombies.models.SimulationInput;
+import org.omarsalem.zombies.models.SimulationResult;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
