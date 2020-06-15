@@ -17,7 +17,7 @@ class Simulator {
                 case 'U':
                     currentY--;
                     if (currentY < 0) {
-                        currentY += 10;
+                        currentY += dimension;
                     }
                     break;
                 case 'D':
@@ -26,16 +26,17 @@ class Simulator {
                 case 'L':
                     currentX--;
                     if (currentX < 0) {
-                        currentX += 10;
+                        currentX += dimension;
                     }
                     break;
                 case 'R':
                     currentX++;
                     break;
             }
-            currentX %= 10;
-            currentY %= 10;
-            zombiePositions.add(new Point(currentX, currentY));
+            currentX %= dimension;
+            currentY %= dimension;
+            final Point newPosition = new Point(currentX, currentY);
+            zombiePositions.add(newPosition);
         }
         return new SimulationResult(score, zombiePositions);
     }
