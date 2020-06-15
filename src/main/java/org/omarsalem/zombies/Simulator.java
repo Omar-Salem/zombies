@@ -21,8 +21,11 @@ class Simulator {
             int currentY = zombiePosition.y;
 
             for (int i = 0; i < charArray.length; i++) {
-                char c = charArray[i];
-                final Point newPosition = getNewPosition(dimension, c, currentX, currentY);
+                char heading = charArray[i];
+                final Point newPosition = getNewPosition(dimension,
+                        heading,
+                        currentX,
+                        currentY);
                 currentX = newPosition.x;
                 currentY = newPosition.y;
                 final Optional<Point> potentialInfection = creaturesPositions
