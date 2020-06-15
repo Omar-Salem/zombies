@@ -14,4 +14,9 @@ public class Cordinates {
         this.x = currentX;
         this.y = currentY;
     }
+
+    @Override
+    public String toString() {
+        return String.format("(%s,%s)", x, y);
+    }
 }
