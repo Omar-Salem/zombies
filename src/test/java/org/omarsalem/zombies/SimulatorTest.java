@@ -1,11 +1,11 @@
 package org.omarsalem.zombies;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import java.awt.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -13,64 +13,57 @@ import static org.junit.Assert.assertEquals;
 public class SimulatorTest {
 
     private final Simulator target = new Simulator();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     public void run_edgeMovementHorizontal() {
         //Arrange
-        final int dimension = 10;
-        final Point zombiePosition = new Point(0, 4);
-        final String moves = "L";
+        final SimulationInput simulationInput = new SimulationInput();
+        simulationInput.setDimension(10);
+        simulationInput.setInitialPosition(new Cordinates(0, 4));
+        simulationInput.setMove("L");
 
         //Act
-        final SimulationResult simulationResult = target.run(dimension,
-                zombiePosition,
-                new HashSet<>(),
-                moves);
+        final SimulationResult simulationResult = target.run(simulationInput);
 
         //Assert
-        assertEquals(new Point(9, 4), simulationResult.getZombiePositions().get(0));
+        assertEquals(new Cordinates(9, 4), simulationResult.getZombiePositions().get(0));
     }
 
     @Test
     public void run_edgeMovementVertical() {
         //Arrange
-        final int dimension = 10;
-        final Point zombiePosition = new Point(3, 9);
-        final String moves = "D";
+        final SimulationInput simulationInput = new SimulationInput();
+        simulationInput.setDimension(10);
+        simulationInput.setInitialPosition(new Cordinates(3, 9));
+        simulationInput.setMove("D");
 
         //Act
-        final SimulationResult simulationResult = target.run(dimension,
-                zombiePosition,
-                new HashSet<>(),
-                moves);
+        final SimulationResult simulationResult = target.run(simulationInput);
 
         //Assert
-        assertEquals(new Point(3, 0), simulationResult.getZombiePositions().get(0));
+        assertEquals(new Cordinates(3, 0), simulationResult.getZombiePositions().get(0));
     }
 
     @Test
-    public void run() {
+    public void run() throws IOException {
         //Arrange
-        final int dimension = 4;
-        final Point zombiePosition = new Point(2, 1);
-        final Set<Point> creaturesPositions = new HashSet<>(Arrays.asList(new Point(0, 1),
-                new Point(1, 2),
-                new Point(3, 1)));
-        final String moves = "DLUURR";
+        final String json = IOUtils
+                .toString(this.getClass().getResourceAsStream("/input.json"),
+                        Charset.defaultCharset());
+        final SimulationInput simulationInput = objectMapper.readValue(json, SimulationInput.class);
+
 
         //Act
-        final SimulationResult simulationResult = target.run(dimension,
-                zombiePosition,
-                creaturesPositions,
-                moves);
+        final SimulationResult simulationResult = target.run(simulationInput);
 
         //Assert
         assertEquals(3, simulationResult.getScore());
-        final Point[] expected = {new Point(3, 0),
-                new Point(2, 1),
-                new Point(1, 0),
-                new Point(0, 0)};
-        final Point[] actual = simulationResult.getZombiePositions().toArray(new Point[0]);
+        final Cordinates[] expected = {new Cordinates(3, 0),
+                new Cordinates(2, 1),
+                new Cordinates(1, 0),
+                new Cordinates(0, 0)};
+        final Cordinates[] actual = simulationResult.getZombiePositions().toArray(new Cordinates[0]);
         assertArrayEquals(expected, actual);
     }
 }

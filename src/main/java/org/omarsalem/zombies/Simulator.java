@@ -1,42 +1,43 @@
 package org.omarsalem.zombies;
 
-import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Queue;
 
 class Simulator {
-    SimulationResult run(int dimension,
-                         Point initialPosition,
-                         Set<Point> creaturesPositions,
-                         String moves) {
+    SimulationResult run(SimulationInput simulationInput) {
         int score = 0;
-        final ArrayList<Point> zombiePositions = new ArrayList<>();
-        Queue<Point> infected = new LinkedList<>();
-        infected.add(initialPosition);
-        char[] charArray = moves.toCharArray();
+        final ArrayList<Cordinates> zombiePositions = new ArrayList<>();
+        Queue<Cordinates> infected = new LinkedList<>();
+        infected.add(simulationInput.getInitialPosition());
+        char[] charArray = simulationInput.getMove().toCharArray();
 
         while (!infected.isEmpty()) {
-            Point zombiePosition = ((LinkedList<Point>) infected).pop();
-            int currentX = zombiePosition.x;
-            int currentY = zombiePosition.y;
+            Cordinates zombiePosition = ((LinkedList<Cordinates>) infected).pop();
+            int currentX = zombiePosition.getX();
+            int currentY = zombiePosition.getY();
 
             for (int i = 0; i < charArray.length; i++) {
                 char heading = charArray[i];
-                final Point newPosition = getNewPosition(dimension,
+                final Cordinates newPosition = getNewPosition(simulationInput.getDimension(),
                         heading,
                         currentX,
                         currentY);
-                currentX = newPosition.x;
-                currentY = newPosition.y;
-                final Optional<Point> potentialInfection = creaturesPositions
-                        .stream()
-                        .filter(p -> p.equals(newPosition))
-                        .findAny();
+                currentX = newPosition.getX();
+                currentY = newPosition.getY();
+                if (simulationInput.getCreaturesPositions() != null) {
+                    final Optional<Cordinates> potentialInfection = simulationInput.getCreaturesPositions()
+                            .stream()
+                            .filter(p -> p.equals(newPosition))
+                            .findAny();
 
-                if (potentialInfection.isPresent()) {
-                    score++;
-                    infected.add(potentialInfection.get());
-                    creaturesPositions.remove(potentialInfection.get());
+                    if (potentialInfection.isPresent()) {
+                        score++;
+                        final Cordinates infection = potentialInfection.get();
+                        infected.add(infection);
+                        simulationInput.getCreaturesPositions().remove(infection);
+                    }
                 }
                 if (charArray.length - 1 == i) {
                     zombiePositions.add(newPosition);
@@ -47,7 +48,7 @@ class Simulator {
         return new SimulationResult(score, zombiePositions);
     }
 
-    private Point getNewPosition(int dimension, char heading, int currentX, int currentY) {
+    private Cordinates getNewPosition(int dimension, char heading, int currentX, int currentY) {
         switch (heading) {
             case 'U':
                 currentY--;
@@ -57,6 +58,7 @@ class Simulator {
                 break;
             case 'D':
                 currentY++;
+                currentY %= dimension;
                 break;
             case 'L':
                 currentX--;
@@ -66,10 +68,9 @@ class Simulator {
                 break;
             case 'R':
                 currentX++;
+                currentX %= dimension;
                 break;
         }
-        currentX %= dimension;
-        currentY %= dimension;
-        return new Point(currentX, currentY);
+        return new Cordinates(currentX, currentY);
     }
 }
