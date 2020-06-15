@@ -1,43 +1,71 @@
 package org.omarsalem.zombies;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.Queue;
 
 class Simulator {
     SimulationResult run(int dimension,
-                         Point zombiePosition,
-                         Point[] creaturesPositions,
+                         Point initialPosition,
+                         Set<Point> creaturesPositions,
                          String moves) {
         int score = 0;
-        int currentX = zombiePosition.x;
-        int currentY = zombiePosition.y;
         final ArrayList<Point> zombiePositions = new ArrayList<>();
-        for (char c : moves.toCharArray()) {
-            switch (c) {
-                case 'U':
-                    currentY--;
-                    if (currentY < 0) {
-                        currentY += dimension;
-                    }
-                    break;
-                case 'D':
-                    currentY++;
-                    break;
-                case 'L':
-                    currentX--;
-                    if (currentX < 0) {
-                        currentX += dimension;
-                    }
-                    break;
-                case 'R':
-                    currentX++;
-                    break;
+        Queue<Point> infected = new LinkedList<>();
+        infected.add(initialPosition);
+        while (!infected.isEmpty()) {
+            Point zombiePosition = ((LinkedList<Point>) infected).pop();
+            int currentX = zombiePosition.x;
+            int currentY = zombiePosition.y;
+
+            char[] charArray = moves.toCharArray();
+            for (int i = 0; i < charArray.length; i++) {
+                char c = charArray[i];
+                final Point newPosition = getNewPosition(dimension, c, currentX, currentY);
+                currentX = newPosition.x;
+                currentY = newPosition.y;
+                final Optional<Point> potentialInfection = creaturesPositions
+                        .stream()
+                        .filter(p -> p.equals(newPosition))
+                        .findAny();
+
+                if (potentialInfection.isPresent()) {
+                    score++;
+                    infected.add(potentialInfection.get());
+                    creaturesPositions.remove(potentialInfection.get());
+                }
+                if (charArray.length - 1 == i) {
+                    zombiePositions.add(newPosition);
+                }
             }
-            currentX %= dimension;
-            currentY %= dimension;
-            final Point newPosition = new Point(currentX, currentY);
-            zombiePositions.add(newPosition);
         }
+
         return new SimulationResult(score, zombiePositions);
+    }
+
+    private Point getNewPosition(int dimension, char heading, int currentX, int currentY) {
+        switch (heading) {
+            case 'U':
+                currentY--;
+                if (currentY < 0) {
+                    currentY += dimension;
+                }
+                break;
+            case 'D':
+                currentY++;
+                break;
+            case 'L':
+                currentX--;
+                if (currentX < 0) {
+                    currentX += dimension;
+                }
+                break;
+            case 'R':
+                currentX++;
+                break;
+        }
+        currentX %= dimension;
+        currentY %= dimension;
+        return new Point(currentX, currentY);
     }
 }

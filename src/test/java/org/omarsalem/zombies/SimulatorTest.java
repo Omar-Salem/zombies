@@ -3,6 +3,9 @@ package org.omarsalem.zombies;
 import org.junit.Test;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -21,7 +24,7 @@ public class SimulatorTest {
         //Act
         final SimulationResult simulationResult = target.run(dimension,
                 zombiePosition,
-                new Point[0],
+                new HashSet<>(),
                 moves);
 
         //Assert
@@ -38,7 +41,7 @@ public class SimulatorTest {
         //Act
         final SimulationResult simulationResult = target.run(dimension,
                 zombiePosition,
-                new Point[0],
+                new HashSet<>(),
                 moves);
 
         //Assert
@@ -50,7 +53,9 @@ public class SimulatorTest {
         //Arrange
         final int dimension = 4;
         final Point zombiePosition = new Point(2, 1);
-        final Point[] creaturesPositions = {new Point(0, 1), new Point(1, 2), new Point(3, 1)};
+        final Set<Point> creaturesPositions = new HashSet<>(Arrays.asList(new Point(0, 1),
+                new Point(1, 2),
+                new Point(3, 1)));
         final String moves = "DLUURR";
 
         //Act
